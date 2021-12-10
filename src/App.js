@@ -29,6 +29,7 @@ function App() {
 
       let coinsData = obj.data;
       setCells(coinsData)
+      console.log()
     })
   };
 
@@ -45,7 +46,31 @@ function App() {
       {
         Header: "Symbol",
         accessor: "symbol"
-      }
+      },
+      {
+        Header: "Price",
+        accessor: "quote.USD.price"
+      },
+      {
+        Header: "24h %",
+        accessor: "quote.USD.percent_change_24h"
+      },
+      {
+        Header: "7d %",
+        accessor: "quote.USD.percent_change_7d"
+      },
+      {
+        Header: "Market Cap",
+        accessor: "quote.USD.market_cap"
+      },
+      {
+        Header: "Volume(24h)",
+        accessor: "quote.USD.volume_24h"
+      },
+      {
+        Header: "Circulating Supply",
+        accessor: "circulating_supply"
+      },
     ],
     []
   );
