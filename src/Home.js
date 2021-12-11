@@ -1,7 +1,8 @@
 import React from "react";
-import { useTable } from "react-table";
+import { useTable, useRowSelect } from "react-table";
+import { Checkbox } from "./CheckBox";
 
-function Home({columns, data}) {
+function Home({columns, data, __handleClickRow}) {
 
       // Use the useTable Hook to send the columns and data to build the table
   const {
@@ -9,11 +10,12 @@ function Home({columns, data}) {
     getTableBodyProps, // table body props from react-table
     headerGroups, // headerGroups, if your table has groupings
     rows, // rows for the table based on the data passed
-    prepareRow // Prepare the row (this function needs to be called for each row before getting the row props)
+    prepareRow, // Prepare the row (this function needs to be called for each row before getting the row props)
   } = useTable({
     columns,
     data
-  });
+  },
+  );
 
   /* 
     Render the UI for your table
@@ -45,10 +47,13 @@ function Home({columns, data}) {
         {rows.map((row, i) => {
           prepareRow(row);
           return (
-            <tr {...row.getRowProps()}>
+            <tr {...row.getRowProps()} __handleClickRow={__handleClickRow}  >
               {row.cells.map((cell) => {
+                  console.log('cell', cell);
                 return (
-                  <td {...cell.getCellProps()} style={styles.td}>
+                  <td {...cell.getCellProps()} style={styles.td} onClick={() => {
+                      __handleClickRow(cell.row.original.id)
+                  }}>
                     {cell.render("Cell")}
                   </td>
                 );
