@@ -8,13 +8,14 @@ import Research from './Research';
 import Graphs from './Graphs';
 import NavBar from './NavBar';
 import { flushSync } from "react-dom";
+import { getByPlaceholderText } from "@testing-library/react";
 
 function App() {
 
   /** state variables */
-  const [cells, setCells] = useState([])
+  const [ cells, setCells ] = useState([])
   const [ favIndex, setFavIndex ] = useState([]);
-  const [favorite, setFavorite] = useState(false); // this will need to go with react-table
+  const [ favorite, setFavorite ] = useState(false); // this will need to go with react-table
 
     /** side effects */
     useEffect(() => {
@@ -48,7 +49,6 @@ function App() {
           console.log('data from api :)', data);
         })
     }
-
 
    const getData = async () => {
     var baseUrl = "https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest"
@@ -86,26 +86,41 @@ function App() {
     }
   }
 
+  // Print an integer with commas as thousands separators
+  function thousands_separators(num)
+  {
+    var num_parts = num.toString().split(".");
+    num_parts[0] = num_parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    return num_parts.join(".");
+  }
+
   const columns = [
       {
         Header: "Add to Portfolio",
         Cell: (rowData) => {
-          console.log('rowData', rowData);
           return (
-            <div>
+            <button style={
+              {color: '#f6b87e'}}
+              >
               { favIndex.includes(parseInt(rowData.row.original.id)) ? "★" : "☆" }
-            </div>
+            </button>
           )
         }
-        
       },
       {
         Header: "#",
-        accessor: "cmc_rank" // accessor is the "key" in the data
+        accessor: "cmc_rank", // accessor is the "key" in the data
       },
       {
         Header: "Name",
-        accessor: "name"
+        accessor: "name",
+        Cell: ({ value }) =>  {
+          return (
+          <b>
+          {value}
+          </b>
+          );
+        }
       },
       {
         Header: "Symbol",
@@ -113,27 +128,69 @@ function App() {
       },
       {
         Header: "Price",
-        accessor: "quote.USD.price"
+        accessor: "quote.USD.price",
+        Cell: ({ cell: { value } }) => {
+          return (
+            <>
+            ${ thousands_separators((value.toFixed(2))) }
+            </>
+          );
+        }
       },
       {
         Header: "24h %",
-        accessor: "quote.USD.percent_change_24h"
+        accessor: "quote.USD.percent_change_24h",
+        Cell: ({ cell: { value } }) => {
+          return (
+            <p style={{ color: value > 0 ? "green" : "red" }}>
+            { (value.toFixed(2)) }%
+            </p>
+          );
+        }
       },
       {
         Header: "7d %",
-        accessor: "quote.USD.percent_change_7d"
+        accessor: "quote.USD.percent_change_7d",
+        Cell: ({ cell: { value } }) => {
+          return (
+            <p style={{ color: value > 0 ? "#16c784" : "#ea3943" }}>
+            { (value.toFixed(2)) }%
+            </p>
+          );
+        }
       },
       {
         Header: "Market Cap",
-        accessor: "quote.USD.market_cap"
+        accessor: "quote.USD.market_cap",
+        Cell: ({ cell: { value } }) => {
+          return (
+            <>
+            ${ thousands_separators(Math.round(value)) }
+            </>
+          );
+        }
       },
       {
         Header: "Volume(24h)",
-        accessor: "quote.USD.volume_24h"
+        accessor: "quote.USD.volume_24h",
+        Cell: ({ cell: { value } }) => {
+          return (
+            <>
+            ${ thousands_separators(Math.round(value)) }
+            </>
+          );
+        }
       },
       {
         Header: "Circulating Supply",
-        accessor: "circulating_supply"
+        accessor: "circulating_supply",
+        Cell: ({ cell: { value } }) => {
+          return (
+            <>
+            { thousands_separators(Math.round(value)) }
+            </>
+          );
+        }
       },
     ];
 
@@ -155,7 +212,23 @@ function App() {
           <Graphs />
         </Route>
         <Route exact path ="/">
-        <>{cells && <Home columns={columns} data={data} __handleClickRow={handleClickRow} />}</>
+        <>{cells && <Home 
+                      columns={columns} 
+                      data={data} 
+                      __handleClickRow={handleClickRow} 
+                      getHeaderProps={column => ({
+                        onClick: () => alert('Header!'),
+                      })}
+                      getColumnProps={column => ({
+                        onClick: () => alert('Column!'),
+                      })}
+                      getRowProps={row => ({
+                        style: {
+                          background: row.index % 2 === 0 ? 'rgba(0,0,0,.1)' : 'white',
+                        },
+                      })}
+                      
+                      />}</>
         </Route>
       </Switch>
     </div>
