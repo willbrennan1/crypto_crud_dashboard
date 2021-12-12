@@ -96,7 +96,7 @@ function App() {
 
   const columns = [
       {
-        Header: "Add to Portfolio",
+        Header: " ",
         Cell: (rowData) => {
           return (
             <button style={
@@ -142,7 +142,7 @@ function App() {
         accessor: "quote.USD.percent_change_24h",
         Cell: ({ cell: { value } }) => {
           return (
-            <p style={{ color: value > 0 ? "green" : "red" }}>
+            <p style={{ color: value > 0 ? "#16c784" : "#ea3943" }}>
             { (value.toFixed(2)) }%
             </p>
           );

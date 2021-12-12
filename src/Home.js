@@ -34,11 +34,11 @@ const defaultPropGetter = () => ({})
       }
       thead {
         height: 64px;
-        background: #3861fb;
+        background: #fff;
       }
       thead th {
         font-size: 14px;
-        color: white;
+        color: black;
         text-align: left;
         padding: 0 30px;
         font-family: Inter, -apple-system, BlinkMacSystemFont, "segoe ui", Roboto, Helvetica, Arial, sans-serif;
@@ -50,12 +50,18 @@ const defaultPropGetter = () => ({})
         font-size: 14px;
         text-align: left;
         font-weight: 500;
+        background: #fff;
         
       }
       tr td {
         padding: 0 30px;
         border-bottom: 1px solid #3c1742;
+        border-color: #eff2f5;
       }
+      tr:hover {
+        background-color: rgb(248,250,253);
+      }
+
       @media only screen and (max-width: 992px) {
         table {
           white-space: nowrap;
